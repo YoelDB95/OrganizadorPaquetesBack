@@ -3,12 +3,13 @@ const {MONGODB_URI} = require('./config')
 
 const direccionSchema = new mongoose.Schema({
     direccion: String,
-    ciudad: String
+    ciudad: String,
+    entregado: Boolean
 })
 
-direccionSchema.set('ToJSON', {
+direccionSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
+        returnedObject.id = returnedObject._id.toString().toString()
         delete returnedObject._id
         delete returnedObject.__v
     }
