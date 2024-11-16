@@ -4,7 +4,11 @@ const {MONGODB_URI} = require('./config')
 const direccionSchema = new mongoose.Schema({
     direccion: String,
     ciudad: String,
-    entregado: Boolean
+    entregado: Boolean,
+    paquetes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Paquete'
+    }]
 })
 
 direccionSchema.set('toJSON', {

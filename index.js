@@ -18,8 +18,11 @@ app.use(cors())
 
 app.get('/api/direcciones', (request, response) => {
     Direccion.find({})
-    .then(e => response.json(e))
-    
+    .populate({
+        path: 'paquetes',
+        match: { entregado: false }
+    })
+    .then(e => response.json(e))    
 })
 
 app.post('/api/direcciones', (request, response) => {
@@ -31,7 +34,7 @@ app.post('/api/direcciones', (request, response) => {
 
     console.log(direccion);
     
-    Direccion.save().then(
+    direccion.save().then(
         result => console.log(result)
     )
     
@@ -54,7 +57,20 @@ app.post('/api/paquetes', (request, response) => {
         entregado: false
     })
 
-    newPaquete.save().then(result => response.status(201).json(result))    
+    newPaquete.save().then(result => {
+        console.log(result);
+        
+        Direccion.findByIdAndUpdate(
+            body.idDireccion, 
+            { $push: { paquetes: result._id } }, 
+            { new: true }
+        )
+            .then(re => {
+                response.status(201).json(result)  
+            })
+            .catch(e => {return response.status(400).json(e)})
+    })
+    .catch(e => response.status(400).json(e))
 })
 
 app.put('/api/paquetes/:id', (request, response) => {
@@ -69,6 +85,12 @@ app.put('/api/paquetes/:id', (request, response) => {
 
     Paquete.findByIdAndUpdate(request.params.id, paquete, {new: true})
     .then(result => response.json(result))
+    .catch(e => response.status(400).json(e))
+})
+
+app.delete('/api/paquetes/:id', (request, response) => {
+    Paquete.findByIdAndDelete(request.params.id)
+    .then(result => response.json('Paquete deleted'))
     .catch(e => response.status(400).json(e))
 })
 
