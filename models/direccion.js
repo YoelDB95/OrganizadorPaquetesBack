@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const {MONGODB_URI} = require('./config')
 
 const direccionSchema = new mongoose.Schema({
     direccion: String,
