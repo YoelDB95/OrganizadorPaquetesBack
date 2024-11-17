@@ -1,6 +1,7 @@
 const Direccion = require('../models/direccion')
+const Paquete = require('../models/paquete')
 
-const direcciones = [
+const addresses = [
     { 
         direccion: 'san martin 1415',
         ciudad: 'Azul'
@@ -15,7 +16,20 @@ const direcciones = [
     }
 ]
 
-const nonExistingId = async () => {
+const packages = [
+    { 
+        codigo: '1001',
+        id: '673a6c54f8ca4f17dae0aa0e'
+     },
+    { 
+        codigo: '2002',
+    },
+    { 
+        codigo: '3003'
+    }
+]
+
+const nonExistingIdAddress = async () => {
     const direccion = new Direccion({ content: 'willremovethissoon', ciudad: 'random'})
     await direccion.save()
     await direccion.deleteOne()
@@ -23,11 +37,24 @@ const nonExistingId = async () => {
     return direccion._id.toString()
 }
 
-const direccionesInDb = async () => {
+const addressesInDb = async () => {
     const direcciones = await Direccion.find({})
     return direcciones.map(direccion => direccion.toJSON())
 }
 
+const nonExistingIdPackages = async () => {
+    const paquete = new Paquete({ codigo: 'willremovethissoon', id: '673a6c54f8ca4f17dae0aa0e'})
+    await paquete.save()
+    await paquete.deleteOne()
+
+    return paquete._id.toString()
+}
+
+const packagesInDb = async () => {
+    const paquetes = await Paquete.find({})
+    return paquetes.map(paquete => paquete.toJSON())
+}
+
 module.exports = {
-    direcciones, nonExistingId, direccionesInDb
+    addresses, packages, nonExistingIdAddress, addressesInDb, nonExistingIdPackages, packagesInDb, 
 }

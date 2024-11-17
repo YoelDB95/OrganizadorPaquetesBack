@@ -3,93 +3,95 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const Direccion = require('../models/direccion')
+const Paquete = require('../models/paquete')
 const helper = require('./test_helper')
 
 const api = supertest(app)
 
-describe('when there are some direcciones', () => {
+describe('when there are some paquetes', () => {
     beforeEach(async () => {
-        await Direccion.deleteMany({})
+        await Paquete.deleteMany({})
 
-        const direccionObject = helper.direcciones.map(direccion => new Direccion(direccion))
-        const promiseArray = direccionObject.map(direccion => direccion.save())
+        const paquetesObject = helper.packages.map(paquete => new Paquete(paquete))
+        const promiseArray = paquetesObject.map(paquete => paquete.save())
         await Promise.all(promiseArray)
     })
 
-    test('direcciones are returned as json', async () => {
+    test('paquetes are returned as json', async () => {
         console.log('entered test');
           await api
-              .get('/api/direcciones')
+              .get('/api/paquetes')
               .expect(200)
               .expect('Content-Type', /application\/json/)
     })
 
-    test('all notes are returned', async () => {
-        const response = await api.get('/api/direcciones')
+    test('all paquetes are returned', async () => {
+        const response = await api.get('/api/paquetes')
     
-        assert.strictEqual(response.body.length, helper.direcciones.length)
+        assert.strictEqual(response.body.length, helper.packages.length)
     })
 
-    test('a specific note is within the returned notes', async () => {
-        const response = await api.get('/api/direcciones')
+    test('a specific paquete is within the returned notes', async () => {
+        const response = await api.get('/api/paquetes')
     
-        const contents = response.body.map(e => e.direccion)
-        assert(contents.includes('san martin 1415'))
+        const contents = response.body.map(e => e.codigo)
+        assert(contents.includes('1001'))
     })
 
-    describe('addition of a new note', () => {
+    describe('addition of a new paquete', () => {
         test('succeeds with valid data', async () => {
-            const newDireccion = {
-              direccion: 'async/await simplifies making async calls',
-              ciudad: "true",
+            const newPaquete = {
+              codigo: '4004',
+              idDireccion: '673a6c54f8ca4f17dae0aa0e'
             }
-      
+            
             await api
-              .post('/api/direcciones')
-              .send(newDireccion)
+              .post('/api/paquetes')
+              .send(newPaquete)
               .expect(201)
               .expect('Content-Type', /application\/json/)
       
-            const direccionesAtEnd = await helper.direccionesInDb()
+            const paquetesAtEnd = await helper.packagesInDb()
             
-            assert.strictEqual(direccionesAtEnd.length, helper.direcciones.length + 1)
+            assert.strictEqual(paquetesAtEnd.length, helper.packages.length + 1)
       
-            const contents = direccionesAtEnd.map(n => n.direccion)
-            assert(contents.includes('async/await simplifies making async calls'))
+            const contents = paquetesAtEnd.map(n => n.codigo)
+            assert(contents.includes('4004'))
           })
 
           test('fails with status code 400 if data invalid', async () => {
-            const newDireccion = {
-              direccion: 'direcccion'
+            const newPaquete = {
+              entregado: false,
+              idDireccion: '673a6c54f8ca4f17dae0aa0e'
             }
       
             await api
-              .post('/api/direcciones')
-              .send(newDireccion)
+              .post('/api/paquetes')
+              .send(newPaquete)
               .expect(400)
       
-            const direccionesAtEnd = await helper.direccionesInDb()
+            const paquetesAtEnd = await helper.packagesInDb()
       
-            assert.strictEqual(direccionesAtEnd.length, helper.direcciones.length)
+            assert.strictEqual(paquetesAtEnd.length, helper.packages.length)
           })
     })
 
-    describe('deletion of a note', () => {
+    describe('deletion of a paquete', () => {
         test('succeeds with status code 204 if id is valid', async () => {
-          const direccionesAtStart = await helper.direccionesInDb()
-          const direccionToDelete = direccionesAtStart[0]
+          const paquetesAtStart = await helper.packagesInDb()
+          const paqueteToDelete = paquetesAtStart[0]
     
           await api
-            .delete(`/api/direcciones/${direccionToDelete.id}`)
+            .delete(`/api/paquetes/${paqueteToDelete.id}`)
             .expect(204)
     
-          const direccionesAtEnd = await helper.direccionesInDb()
+          const paquetesAtEnd = await helper.packagesInDb()
     
-          assert.strictEqual(direccionesAtEnd.length, helper.direcciones.length - 1)
-    
-          const contents = direccionesAtEnd.map(r => r.direccion)
-          assert(!contents.includes(direccionToDelete.direccion))
+          assert.strictEqual(paquetesAtEnd.length, helper.packages.length - 1)
+          
+          const contents = paquetesAtEnd.map(r => r.codigo)
+          
+          assert(!contents.includes(paqueteToDelete.codigo))
         })
       })
 })
