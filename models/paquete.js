@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 
 const paqueteSchema = new mongoose.Schema({
-    codigo: String,
+    codigo: {
+        type: String,
+        required: true
+    },
     fechaAgregado: Date,
     fechaActualizado: Date,
     entregado: Boolean

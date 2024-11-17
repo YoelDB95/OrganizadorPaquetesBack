@@ -1,8 +1,15 @@
 const mongoose = require('mongoose')
 
 const direccionSchema = new mongoose.Schema({
-    direccion: String,
-    ciudad: String,
+    direccion: {
+        type: String,
+        required: true,
+        min: 5
+    },
+    ciudad: {
+        type: String,
+        required: true
+    },
     entregado: Boolean,
     paquetes: [{
         type: mongoose.Schema.Types.ObjectId,
