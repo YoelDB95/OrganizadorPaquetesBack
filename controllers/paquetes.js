@@ -4,7 +4,7 @@ const Paquete = require('../models/paquete')
 paquetesRouter.get('/', (request, response) => {
     Paquete.find({})
     .then(result => response.json(result))
-    .catch(e => response.json(e))
+    .catch(e => next(e))
 })
 
 paquetesRouter.post('/', (request, response) => {
@@ -25,11 +25,11 @@ paquetesRouter.post('/', (request, response) => {
             { new: true }
         )
             .then(re => {
-                response.status(201).json(result)  
+                response.status(201).json({result, re})  
             })
-            .catch(e => {return response.status(400).json(e)})
+            .catch(e => next(e))
     })
-    .catch(e => response.status(400).json(e))
+    .catch(e => next(e))
 })
 
 paquetesRouter.put('/:id', (request, response) => {
@@ -44,13 +44,13 @@ paquetesRouter.put('/:id', (request, response) => {
 
     Paquete.findByIdAndUpdate(request.params.id, paquete, {new: true})
     .then(result => response.json(result))
-    .catch(e => response.status(400).json(e))
+    .catch(e => next(e))
 })
 
 paquetesRouter.delete('/:id', (request, response) => {
     Paquete.findByIdAndDelete(request.params.id)
     .then(result => response.json('Paquete deleted'))
-    .catch(e => response.status(400).json(e))
+    .catch(e => next(e))
 })
 
 
