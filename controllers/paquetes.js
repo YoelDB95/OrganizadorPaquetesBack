@@ -2,12 +2,6 @@ const paquetesRouter = require('express').Router()
 const Paquete = require('../models/paquete')
 const Direccion = require('../models/direccion')
 
-paquetesRouter.get('/', (request, response, next) => {
-    Paquete.find({})
-    .then(result => response.json(result))
-    .catch(e => next(e))
-})
-
 paquetesRouter.post('/', (request, response, next) => {
     const body = request.body
 

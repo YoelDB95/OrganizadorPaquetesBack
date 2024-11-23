@@ -17,25 +17,11 @@ describe('when there are some paquetes', () => {
         await Promise.all(promiseArray)
     })
 
-    test('paquetes are returned as json', async () => {
+    test('no paquetes are returned, get error', async () => {
         console.log('entered test');
           await api
               .get('/api/paquetes')
-              .expect(200)
-              .expect('Content-Type', /application\/json/)
-    })
-
-    test('all paquetes are returned', async () => {
-        const response = await api.get('/api/paquetes')
-    
-        assert.strictEqual(response.body.length, helper.packages.length)
-    })
-
-    test('a specific paquete is within the returned notes', async () => {
-        const response = await api.get('/api/paquetes')
-    
-        const contents = response.body.map(e => e.codigo)
-        assert(contents.includes('1001'))
+              .expect(404)
     })
 
     describe('addition of a new paquete', () => {
