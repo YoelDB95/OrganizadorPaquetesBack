@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 
-const paqueteSchema = new mongoose.Schema({
-    codigo: {
+const packageSchema = new mongoose.Schema({
+    code: {
         type: String,
         required: true
     },
-    fechaAgregado: Date,
-    fechaActualizado: Date,
-    entregado: Boolean
+    dateCreatedAt: Date,
+    dateUpdatedAt: Date,
+    delivered: Boolean
 })
 
-paqueteSchema.set('toJSON', {
+packageSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
@@ -18,4 +18,4 @@ paqueteSchema.set('toJSON', {
     }
 })
 
-module.exports = mongoose.model('Paquete', paqueteSchema)
+module.exports = mongoose.model('Package', packageSchema)

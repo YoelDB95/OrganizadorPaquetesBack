@@ -1,23 +1,25 @@
 const mongoose = require('mongoose')
 
-const direccionSchema = new mongoose.Schema({
-    direccion: {
+const addressSchema = new mongoose.Schema({
+    address: {
         type: String,
         required: true,
         min: 5
     },
-    ciudad: {
+    dateCreatedAt: Date,
+    dateUpdatedAt: Date,
+    city: {
         type: String,
         required: true
     },
-    entregado: Boolean,
-    paquetes: [{
+    delivered: Boolean,
+    packages: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paquete'
+        ref: 'Package'
     }]
-})
+}, { strictPopulate: false })
 
-direccionSchema.set('toJSON', {
+addressSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString().toString()
         delete returnedObject._id
@@ -25,4 +27,4 @@ direccionSchema.set('toJSON', {
     }
 })
 
-module.exports = mongoose.model('Direccion', direccionSchema)
+module.exports = mongoose.model('Address', addressSchema)

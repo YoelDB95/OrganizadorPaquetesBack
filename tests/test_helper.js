@@ -1,58 +1,58 @@
-const Direccion = require('../models/direccion')
-const Paquete = require('../models/paquete')
+const Address = require('../models/address')
+const Package = require('../models/package')
 
 const addresses = [
     { 
-        direccion: 'san martin 1415',
-        ciudad: 'Azul'
+        address: 'san martin 1415',
+        city: 'Azul'
      },
     { 
-        direccion: 'av marconi 1759',
-        ciudad: 'Tandil' 
+        address: 'av marconi 1759',
+        city: 'Tandil' 
     },
     {
-        direccion: 'san amrtin 5245',
-        ciudad: 'Olavarria'
+        address: 'san amrtin 5245',
+        city: 'Olavarria'
     }
 ]
 
 const packages = [
     { 
-        codigo: '1001',
+        code: '1001',
         id: '673a6c54f8ca4f17dae0aa0e'
      },
     { 
-        codigo: '2002',
+        code: '2002',
     },
     { 
-        codigo: '3003'
+        code: '3003'
     }
 ]
 
 const nonExistingIdAddress = async () => {
-    const direccion = new Direccion({ content: 'willremovethissoon', ciudad: 'random'})
-    await direccion.save()
-    await direccion.deleteOne()
+    const address = new Address({ address: 'willremovethissoon', city: 'random'})
+    await address.save()
+    await address.deleteOne()
 
-    return direccion._id.toString()
+    return address._id.toString()
 }
 
 const addressesInDb = async () => {
-    const direcciones = await Direccion.find({})
-    return direcciones.map(direccion => direccion.toJSON())
+    const addresses = await Address.find({})
+    return addresses.map(address => address.toJSON())
 }
 
 const nonExistingIdPackages = async () => {
-    const paquete = new Paquete({ codigo: 'willremovethissoon', id: '673a6c54f8ca4f17dae0aa0e'})
-    await paquete.save()
-    await paquete.deleteOne()
+    const package = new Package({ code: 'willremovethissoon', id: '673a6c54f8ca4f17dae0aa0e'})
+    await package.save()
+    await package.deleteOne()
 
-    return paquete._id.toString()
+    return package._id.toString()
 }
 
 const packagesInDb = async () => {
-    const paquetes = await Paquete.find({})
-    return paquetes.map(paquete => paquete.toJSON())
+    const packages = await Package.find({})
+    return packages.map(package => package.toJSON())
 }
 
 module.exports = {
